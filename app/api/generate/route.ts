@@ -40,10 +40,10 @@ export async function POST(request: Request) {
 
         const data = await response.json();
         const rawContent = data.choices[0].message.content;
-        const cleanJsonStr = rawContent.replace(/```json\n?|\n?
-            ```/g, '').trim();
-    return NextResponse.json(JSON.parse(cleanJsonStr));
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
+        const cleanJsonStr = rawContent.replace(/```json\n?|\n?```/g, '').trim();
+
+        return NextResponse.json(JSON.parse(cleanJsonStr));
+    } catch (error: any) {
+        return NextResponse.json({ error: error.message }, { status: 500 });
+    }
 }
