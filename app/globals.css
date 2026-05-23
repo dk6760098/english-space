@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #f8fafc;
+  /* 极简的浅灰白底色 */
+  color: #1e293b;
+  /* 深灰文字，降低视觉疲劳 */
+}
