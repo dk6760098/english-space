@@ -26,9 +26,11 @@ export default function Home() {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
+
   useEffect(() => {
     async function fetchQuestions() {
       const { data } = await supabase.from("questions")
+        .select() // <--- 就是漏了这极其关键的一句！
         .lte("next_review", new Date().toISOString())
         .order("next_review", { ascending: true });
       if (data) setQuestions(data);
@@ -36,7 +38,6 @@ export default function Home() {
     }
     fetchQuestions();
   }, []);
-
   if (loading) return <div className="min-h-screen flex items-center justify-center">同步记忆曲线中...</div>;
   if (questions.length === 0) return <div className="min-h-screen flex items-center justify-center font-bold text-2xl">🎉 今日任务已完成！</div>;
 
@@ -67,8 +68,8 @@ export default function Home() {
         <div className="space-y-3">
           {Object.entries(currentQ.options).map(([key, value]) => (
             <button key={key} onClick={() => handleAnswer(key)} className={`w-full text-left p-5 rounded-2xl border-2 transition-all flex items-center ${!selectedAnswer ? "border-gray-100 bg-gray-50 hover:border-black" :
-                key === currentQ.correct_answer ? "border-green-500 bg-green-50" :
-                  key === selectedAnswer ? "border-red-500 bg-red-50" : "border-transparent opacity-30"
+              key === currentQ.correct_answer ? "border-green-500 bg-green-50" :
+                key === selectedAnswer ? "border-red-500 bg-red-50" : "border-transparent opacity-30"
               }`}>
               <span className="w-8 font-bold">{key}</span> {value as string}
             </button>
