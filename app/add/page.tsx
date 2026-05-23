@@ -25,15 +25,28 @@ export default function AddQuestion() {
     };
 
     const handleSave = async () => {
+        if (!previewData) return;
         setIsSaving(true);
         try {
-            const { error } = await supabase.from("questions").insert([previewData]);
+            // 【关键修复】在这里给新题目附加上 SM-2 算法的初始值，并把复习时间设为“现在”
+            const newQuestion = {
+                ...previewData,
+                repetition: 0,
+                interval: 1,
+                efactor: 2.5,
+                next_review: new Date().toISOString()
+            };
+
+            const { error } = await supabase.from("questions").insert([newQuestion]);
             if (error) throw error;
-            alert("🎉 题目已入库！");
+            alert("🎉 题目已成功入库！");
             setPreviewData(null);
             setRawText("");
-        } catch (err) { alert("保存失败"); }
-        finally { setIsSaving(false); }
+        } catch (err: any) {
+            alert("保存失败: " + err.message);
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     return (
